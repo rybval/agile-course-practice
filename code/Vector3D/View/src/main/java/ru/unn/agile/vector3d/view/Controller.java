@@ -43,12 +43,9 @@ public class Controller {
     private final ViewModel viewModel = new ViewModel();
 
     private void bind() {
-        vectorTextField.setText(viewModel.getVectorText());
         normResultTextField.setText(viewModel.getNormResultText());
         normalizationResultTextField.setText(viewModel.getNormalizationResultText());
-        dotProductOperandTextField.setText(viewModel.getDotProductOperandText());
         dotProductResultTextField.setText(viewModel.getDotProductResultText());
-        crossProductOperandTextField.setText(viewModel.getCrossProductOperandText());
         crossProductResultTextField.setText(viewModel.getCrossProductResultText());
         calculateButton.setDisable(!viewModel.isButtonEnabled());
     }
