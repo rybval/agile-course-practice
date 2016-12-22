@@ -40,6 +40,8 @@ public class ViewModelTests {
 
     private ViewModel viewModel;
 
+    private ILogger logger;
+
     @Before
     public void setUp() {
         viewModel = new ViewModel();
@@ -286,7 +288,7 @@ public class ViewModelTests {
 
     @Test
     public void canLogCalculation() {
-        ILogger logger = setUpLogger();
+        setUpLogger();
 
         viewModel.calculate();
 
@@ -297,16 +299,14 @@ public class ViewModelTests {
 
     @Test
     public void canLogOperationChanging() {
-        ILogger logger = setUpLogger();
+        setUpLogger();
         ObjectProperty<Matrix.Operation> operation = viewModel.operationProperty();
-        operation.set(Matrix.Operation.ADD);
 
+        operation.set(Matrix.Operation.ADD);
         operation.set(Matrix.Operation.MULTIPLY);
 
-        List<String> messages = logger.getLog();
-        String lastMessage = messages.get(messages.size() - 1);
         assertEquals(LogMessages.CHANGE_OPERATION + " from " + Matrix.Operation.ADD.toString()
-                + " to " + operation.get().toString(), lastMessage);
+                + " to " + operation.get().toString(), getLastLog());
     }
 
     private void doTestOperationGet(final Matrix.Operation op) {
@@ -367,9 +367,13 @@ public class ViewModelTests {
         }
     }
 
-    private ILogger setUpLogger() {
-        ILogger logger = new TestingLogger();
+    private void setUpLogger() {
+        logger = new TestingLogger();
         viewModel.setLogger(logger);
-        return logger;
+    }
+
+    private String getLastLog() {
+        List<String> messages = logger.getLog();
+        return messages.get(messages.size() - 1);
     }
 }
