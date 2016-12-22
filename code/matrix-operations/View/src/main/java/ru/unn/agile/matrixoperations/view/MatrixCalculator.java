@@ -1,15 +1,9 @@
 package ru.unn.agile.matrixoperations.view;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import ru.unn.agile.matrixoperations.model.Matrix;
@@ -60,12 +54,9 @@ public class MatrixCalculator {
     private void bindControls() {
         cbOperation.valueProperty().bindBidirectional(viewModel.operationProperty());
 
-        btnCalculate.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent event) {
-                viewModel.calculate();
-                updateBindMatrixView(resultTable, viewModel.resultMatrix());
-            }
+        btnCalculate.setOnAction(event -> {
+            viewModel.calculate();
+            updateBindMatrixView(resultTable, viewModel.resultMatrix());
         });
     }
 
@@ -81,13 +72,9 @@ public class MatrixCalculator {
                         new NumberStringConverter());
 
         ChangeListener<Number> leftMatrixDimensionListener =
-                new ChangeListener<Number>() {
-                    @Override
-                    public void changed(final ObservableValue<? extends Number> observable,
-                                        final Number oldValue, final Number newValue) {
-                        viewModel.reloadLeftMatrix();
-                        updateBindMatrixView(leftTable, viewModel.leftMatrix());
-                    }
+                (observable, oldValue, newValue) -> {
+                    viewModel.reloadLeftMatrix();
+                    updateBindMatrixView(leftTable, viewModel.leftMatrix());
                 };
         viewModel.leftMatrixRowsProperty().addListener(leftMatrixDimensionListener);
         viewModel.leftMatrixColumnsProperty().addListener(leftMatrixDimensionListener);
@@ -115,20 +102,10 @@ public class MatrixCalculator {
             final int columnIndex = col;
             TableColumn<MatrixViewModel.MatrixRow, Number> column =
                     new TableColumn<>("#" + (col + 1));
-            column.setCellValueFactory(
-                    new Callback<CellDataFeatures<MatrixViewModel.MatrixRow, Number>,
-                                 ObservableValue<Number>>() {
-                        @Override
-                        public ObservableValue<Number> call(
-                                final CellDataFeatures<MatrixViewModel.MatrixRow, Number> param) {
-                            return param.getValue().getCellValue(columnIndex);
-                        }
-                    });
-            column
-                    .setCellFactory(
-                            TextFieldTableCell
-                                    .<MatrixViewModel.MatrixRow, Number>forTableColumn(
-                                            new NumberStringConverter()));
+            column.setCellValueFactory(param -> param.getValue().getCellValue(columnIndex));
+            column.setCellFactory(TextFieldTableCell
+                    .<MatrixViewModel.MatrixRow, Number>forTableColumn(
+                            new NumberStringConverter()));
             tv.getColumns().add(column);
         }
     }
@@ -144,13 +121,9 @@ public class MatrixCalculator {
                         new NumberStringConverter());
 
         ChangeListener<Number> rightMatrixDimensionListener =
-                new ChangeListener<Number>() {
-                    @Override
-                    public void changed(final ObservableValue<? extends Number> observable,
-                                        final Number oldValue, final Number newValue) {
-                        viewModel.reloadRightMatrix();
-                        updateBindMatrixView(rightTable, viewModel.rightMatrix());
-                    }
+                (observable, oldValue, newValue) -> {
+                    viewModel.reloadRightMatrix();
+                    updateBindMatrixView(rightTable, viewModel.rightMatrix());
                 };
         viewModel.rightMatrixRowsProperty().addListener(rightMatrixDimensionListener);
         viewModel.rightMatrixColumnsProperty().addListener(rightMatrixDimensionListener);

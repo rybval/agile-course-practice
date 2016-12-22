@@ -244,13 +244,7 @@ public final class ViewModel {
     }
 
     private void setValuesListeners() {
-        operation.addListener(new ChangeListener<Matrix.Operation>() {
-            @Override
-            public void changed(final ObservableValue<? extends Matrix.Operation> observable,
-                                final Matrix.Operation oldValue, final Matrix.Operation newValue) {
-                status.set(getInputStatus());
-            }
-        });
+        operation.addListener((observable, oldValue, newValue) -> status.set(getInputStatus()));
 
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {
