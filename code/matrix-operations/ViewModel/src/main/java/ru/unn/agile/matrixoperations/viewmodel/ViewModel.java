@@ -246,17 +246,20 @@ public final class ViewModel {
         calculationDisabled.bind(couldCalculate.not());
     }
 
-    private void onOperationChanged(final Matrix.Operation oldValue,
-                                    final Matrix.Operation newValue) {
-        status.set(getInputStatus());
-        String message = LogMessages.CHANGE_OPERATION + " from " + oldValue.toString()
-                + " to " + newValue.toString();
-        logger.log(message);
+    private String buildMessage(final String message, final Object oldValue,
+                                final Object newValue) {
+        return message + " from " + oldValue.toString() + " to " + newValue.toString();
+    }
+
+    private String buildMessage(final String message, final Object newValue) {
+        return message + " to " + newValue.toString();
     }
 
     private void setValuesListeners() {
-        operation.addListener((observable, oldValue, newValue) ->
-                onOperationChanged(oldValue, newValue));
+        operation.addListener((observable, oldValue, newValue) -> {
+            status.set(getInputStatus());
+            logger.log(buildMessage(LogMessages.CHANGE_OPERATION, oldValue, newValue));
+        });
 
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {
