@@ -305,8 +305,8 @@ public class ViewModelTests {
 
         List<String> messages = logger.getLog();
         String lastMessage = messages.get(messages.size() - 1);
-        assertEquals(
-                LogMessages.CHANGE_OPERATION + " to " + operation.get().toString(), lastMessage);
+        assertEquals(LogMessages.CHANGE_OPERATION + " from " + Matrix.Operation.ADD.toString()
+                + " to " + operation.get().toString(), lastMessage);
     }
 
     private void doTestOperationGet(final Matrix.Operation op) {

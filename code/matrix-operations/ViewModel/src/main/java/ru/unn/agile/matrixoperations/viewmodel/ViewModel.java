@@ -99,13 +99,6 @@ public final class ViewModel {
         setLogger(logger);
     }
 
-    void onOperationChanged() {
-        status.set(getInputStatus());
-        String message = LogMessages.CHANGE_OPERATION + " to " + operation.getValue().toString();
-        logger.log(message.toString());
-    }
-
-
     public void calculate() {
         if (calculationDisabled.get()) {
             return;
@@ -253,8 +246,17 @@ public final class ViewModel {
         calculationDisabled.bind(couldCalculate.not());
     }
 
+    private void onOperationChanged(final Matrix.Operation oldValue,
+                                    final Matrix.Operation newValue) {
+        status.set(getInputStatus());
+        String message = LogMessages.CHANGE_OPERATION + " from " + oldValue.toString()
+                + " to " + newValue.toString();
+        logger.log(message);
+    }
+
     private void setValuesListeners() {
-        operation.addListener((observable, oldValue, newValue) -> onOperationChanged());
+        operation.addListener((observable, oldValue, newValue) ->
+                onOperationChanged(oldValue, newValue));
 
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {
