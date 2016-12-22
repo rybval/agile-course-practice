@@ -4,8 +4,3 @@ apply from:   rootDir.getAbsolutePath() + '/code/config/scripts/javafx.plugin'
 dependencies {
     compile project(':matrix-operations-ViewModel')
 }
-
-sourceSets {
-    main.java.srcDir 'src/main/java'
-    test.java.srcDir 'src/test/java'
-}
