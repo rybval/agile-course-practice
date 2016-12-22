@@ -80,9 +80,8 @@ public final class ViewModel {
     public void setLogger(final ILogger logger) {
         if (logger == null) {
             throw new IllegalArgumentException("Logger can not be null");
-        } else {
-            this.logger = logger;
         }
+        this.logger = logger;
     }
 
     // FXML needs default c-tor for binding
@@ -99,6 +98,13 @@ public final class ViewModel {
         this();
         setLogger(logger);
     }
+
+    void onOperationChanged() {
+        status.set(getInputStatus());
+        String message = LogMessages.CHANGE_OPERATION + " to " + operation.getValue().toString();
+        logger.log(message.toString());
+    }
+
 
     public void calculate() {
         if (calculationDisabled.get()) {
@@ -248,7 +254,7 @@ public final class ViewModel {
     }
 
     private void setValuesListeners() {
-        operation.addListener((observable, oldValue, newValue) -> status.set(getInputStatus()));
+        operation.addListener((observable, oldValue, newValue) -> onOperationChanged());
 
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {
@@ -292,10 +298,10 @@ public final class ViewModel {
 
         return Status.INVALID_MATRIX_SIZE;
     }
-
 }
 
 final class LogMessages {
-    static final String CALCULATE = "Calculate.";
+    static final String CALCULATE = "Calculate";
+    static final String CHANGE_OPERATION = "Change operation";
     private LogMessages() { }
 }

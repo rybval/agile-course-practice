@@ -1,5 +1,6 @@
 package ru.unn.agile.matrixoperations.viewmodel;
 
+import javafx.beans.property.ObjectProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -285,14 +286,27 @@ public class ViewModelTests {
 
     @Test
     public void canLogCalculation() {
-        ILogger logger = new TestingLogger();
-        viewModel.setLogger(logger);
+        ILogger logger = setUpLogger();
 
         viewModel.calculate();
 
         List<String> messages = logger.getLog();
         String lastMessage = messages.get(messages.size() - 1);
         assertEquals(LogMessages.CALCULATE, lastMessage);
+    }
+
+    @Test
+    public void canLogOperationChanging() {
+        ILogger logger = setUpLogger();
+        ObjectProperty<Matrix.Operation> operation = viewModel.operationProperty();
+        operation.set(Matrix.Operation.ADD);
+
+        operation.set(Matrix.Operation.MULTIPLY);
+
+        List<String> messages = logger.getLog();
+        String lastMessage = messages.get(messages.size() - 1);
+        assertEquals(
+                LogMessages.CHANGE_OPERATION + " to " + operation.get().toString(), lastMessage);
     }
 
     private void doTestOperationGet(final Matrix.Operation op) {
@@ -351,5 +365,11 @@ public class ViewModelTests {
         for (int i = 0; i < m.getSize(); i++) {
             viewModel.rightMatrix().getMatrix().setElement(i, m.getElement(i));
         }
+    }
+
+    private ILogger setUpLogger() {
+        ILogger logger = new TestingLogger();
+        viewModel.setLogger(logger);
+        return logger;
     }
 }
