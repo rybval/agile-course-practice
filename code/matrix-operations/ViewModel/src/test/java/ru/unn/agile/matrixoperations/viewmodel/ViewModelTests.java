@@ -1,5 +1,6 @@
 package ru.unn.agile.matrixoperations.viewmodel;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import org.junit.After;
 import org.junit.Before;
@@ -307,6 +308,52 @@ public class ViewModelTests {
 
         assertEquals(LogMessages.CHANGE_OPERATION + " from " + Matrix.Operation.ADD.toString()
                 + " to " + operation.get().toString(), getLastLog());
+    }
+
+    @Test
+    public void canLogLeftMatrixColsCountChanging() {
+        setUpLogger();
+        IntegerProperty leftMatrixCols = viewModel.leftMatrixColumnsProperty();
+
+        leftMatrixCols.set(5);
+        leftMatrixCols.set(7);
+
+        assertEquals(LogMessages.CHANGE_LEFT_MATRIX_COLS + " from " + 5 + " to " + 7, getLastLog());
+    }
+
+    @Test
+    public void canLogLeftMatrixRowsCountChanging() {
+        setUpLogger();
+        IntegerProperty leftMatrixRows = viewModel.leftMatrixRowsProperty();
+
+        leftMatrixRows.set(1);
+        leftMatrixRows.set(3);
+
+        assertEquals(LogMessages.CHANGE_LEFT_MATRIX_ROWS + " from " + 1 + " to " + 3, getLastLog());
+    }
+
+    @Test
+    public void canLogRightMatrixColsCountChanging() {
+        setUpLogger();
+        IntegerProperty rightMatrixCols = viewModel.rightMatrixColumnsProperty();
+
+        rightMatrixCols.set(8);
+        rightMatrixCols.set(9);
+
+        assertEquals(LogMessages.CHANGE_RIGHT_MATRIX_COLS + " from " + 8 + " to " + 9,
+                getLastLog());
+    }
+
+    @Test
+    public void canLogRightMatrixRowsCountChanging() {
+        setUpLogger();
+        IntegerProperty rightMatrixRows = viewModel.rightMatrixRowsProperty();
+
+        rightMatrixRows.set(4);
+        rightMatrixRows.set(6);
+
+        assertEquals(LogMessages.CHANGE_RIGHT_MATRIX_ROWS + " from " + 4 + " to " + 6,
+                getLastLog());
     }
 
     private void doTestOperationGet(final Matrix.Operation op) {

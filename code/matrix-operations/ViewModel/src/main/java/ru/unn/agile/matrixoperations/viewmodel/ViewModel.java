@@ -261,6 +261,19 @@ public final class ViewModel {
             logger.log(buildMessage(LogMessages.CHANGE_OPERATION, oldValue, newValue));
         });
 
+        leftMatrixColumns.addListener((observable, oldValue, newValue) ->
+            logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_COLS, oldValue, newValue))
+        );
+        leftMatrixRows.addListener((observable, oldValue, newValue) ->
+                logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_ROWS, oldValue, newValue))
+        );
+        rightMatrixColumns.addListener((observable, oldValue, newValue) ->
+                logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_COLS, oldValue, newValue))
+        );
+        rightMatrixRows.addListener((observable, oldValue, newValue) ->
+                logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ROWS, oldValue, newValue))
+        );
+
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {
                 add(leftMatrixRows);
@@ -308,5 +321,10 @@ public final class ViewModel {
 final class LogMessages {
     static final String CALCULATE = "Calculate";
     static final String CHANGE_OPERATION = "Change operation";
+    static final String CHANGE_LEFT_MATRIX_COLS = "Change columns of left matrix count";
+    static final String CHANGE_LEFT_MATRIX_ROWS = "Change rows of left matrix count";
+    static final String CHANGE_RIGHT_MATRIX_COLS = "Change columns of right matrix count";
+    static final String CHANGE_RIGHT_MATRIX_ROWS = "Change rows of right matrix count";
+
     private LogMessages() { }
 }
