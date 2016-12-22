@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.unn.agile.matrixoperations.model.Matrix;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ViewModelTests {
@@ -261,7 +263,36 @@ public class ViewModelTests {
 
     @Test
     public void canSetLogger() {
-        viewModel.setLogger(new FakeLogger());
+        viewModel.setLogger(new TestingLogger());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cantSetNullLogger() {
+        viewModel.setLogger(null);
+    }
+
+    @Test
+    public void canCreateViewModelWithLogger() {
+        ILogger logger = new TestingLogger();
+        viewModel = new ViewModel(logger);
+        assertNotNull(viewModel);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cantCreateViewModelWithNullLogger() {
+        viewModel = new ViewModel(null);
+    }
+
+    @Test
+    public void canLogCalculation() {
+        ILogger logger = new TestingLogger();
+        viewModel.setLogger(logger);
+
+        viewModel.calculate();
+
+        List<String> messages = logger.getLog();
+        String lastMessage = messages.get(messages.size() - 1);
+        assertEquals(LogMessages.CALCULATE, lastMessage);
     }
 
     private void doTestOperationGet(final Matrix.Operation op) {

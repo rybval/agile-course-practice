@@ -91,6 +91,8 @@ public final class ViewModel {
         setDefaultOperations();
         setCalculationBinding();
         setValuesListeners();
+
+        setLogger(new FakeLogger());
     }
 
     public ViewModel(final ILogger logger) {
@@ -102,6 +104,8 @@ public final class ViewModel {
         if (calculationDisabled.get()) {
             return;
         }
+
+        logger.log(LogMessages.CALCULATE);
 
         resultMatrix = operation.get().apply(leftMatrix, rightMatrix);
 
@@ -289,4 +293,9 @@ public final class ViewModel {
         return Status.INVALID_MATRIX_SIZE;
     }
 
+}
+
+final class LogMessages {
+    static final String CALCULATE = "Calculate.";
+    private LogMessages() { }
 }
