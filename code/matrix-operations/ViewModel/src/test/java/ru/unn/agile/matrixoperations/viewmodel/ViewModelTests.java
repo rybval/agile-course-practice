@@ -259,6 +259,11 @@ public class ViewModelTests {
         }
     }
 
+    @Test
+    public void canSetLogger() {
+        viewModel.setLogger(new FakeLogger());
+    }
+
     private void doTestOperationGet(final Matrix.Operation op) {
         viewModel.operationProperty().set(op);
         assertEquals(op, viewModel.getOperation());

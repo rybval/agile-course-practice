@@ -14,7 +14,8 @@ import ru.unn.agile.matrixoperations.model.Matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewModel {
+public final class ViewModel {
+    private ILogger logger;
     private static final int DEFAULT_ROWS_COUNT = 2;
     private static final int DEFAULT_COLUMNS_COUNT = 2;
 
@@ -76,12 +77,25 @@ public class ViewModel {
         }
     }
 
+    public void setLogger(final ILogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger can not be null");
+        } else {
+            this.logger = logger;
+        }
+    }
+
     // FXML needs default c-tor for binding
     public ViewModel() {
         setDefaultDimensions();
         setDefaultOperations();
         setCalculationBinding();
         setValuesListeners();
+    }
+
+    public ViewModel(final ILogger logger) {
+        this();
+        setLogger(logger);
     }
 
     public void calculate() {
@@ -161,7 +175,7 @@ public class ViewModel {
         return operations;
     }
 
-    public final ObservableList<Matrix.Operation> getOperations() {
+    public ObservableList<Matrix.Operation> getOperations() {
         return operations.get();
     }
 
@@ -169,7 +183,7 @@ public class ViewModel {
         return calculationDisabled;
     }
 
-    public final boolean getCalculationDisabled() {
+    public boolean getCalculationDisabled() {
         return calculationDisabled.get();
     }
 
