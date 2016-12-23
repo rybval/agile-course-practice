@@ -11,13 +11,13 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TxtLoggerTest {
+public class TextLoggerTest {
     private ILogger logger;
     private static final String FILENAME = "./test.log";
 
     @Before
     public void setUp() {
-        logger = new TxtLogger(FILENAME);
+        logger = new TextLogger(FILENAME);
     }
 
     @After
@@ -70,8 +70,20 @@ public class TxtLoggerTest {
     @Test
     public void canCreateLoggerWithFilename() {
         String testFilename = "test filename.log";
-        logger = new TxtLogger(testFilename);
+        logger = new TextLogger(testFilename);
 
         assertNotNull(logger);
+    }
+
+    @Test
+    public void doesLogContainTimestamp() {
+        String testMessage = "test message";
+
+        logger.log(testMessage);
+        String loggedMsg = logger.getLog().get(0);
+
+        assertTrue(loggedMsg.matches("2[0-2][0-9][0-9]-[0-1][0-9]-[0-3][0-9] "
+                                     + "[0-2][0-9]:[0-5][0-9]:[0-5][0-9].*"));
+
     }
 }
