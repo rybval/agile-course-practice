@@ -75,7 +75,7 @@ public class MatrixViewModelTests {
         for (int r = 0; r < srcMatrix.getRows(); r++) {
             for (int c = 0; c < srcMatrix.getColumns(); c++) {
                 assertEquals(srcMatrix.getElement(r, c),
-                        matrixModel.getRows().get(r).getCellValue(c).get(), delta);
+                        matrixModel.getRows().get(r).elementProperty(c).get(), delta);
             }
         }
     }
@@ -85,9 +85,19 @@ public class MatrixViewModelTests {
         float testValue = 334.5f;
         for (int r = 0; r < srcMatrix.getRows(); r++) {
             for (int c = 0; c < srcMatrix.getColumns(); c++) {
-                matrixModel.getRows().get(r).getCellValue(c).set(testValue);
+                matrixModel.getRows().get(r).elementProperty(c).set(testValue);
                 assertEquals(testValue, matrixModel.getMatrix().getElement(r, c), delta);
             }
         }
+    }
+
+    @Test
+    public void canAccessElementProperty() {
+        float setValue = 3.14f;
+
+        matrixModel.elementProperty(1, 1).set(setValue);
+        float getValue = matrixModel.elementProperty(1, 1).get();
+
+        assertEquals(setValue, getValue, Float.MIN_VALUE);
     }
 }

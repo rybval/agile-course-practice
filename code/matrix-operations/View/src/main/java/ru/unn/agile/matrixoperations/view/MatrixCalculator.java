@@ -102,7 +102,7 @@ public class MatrixCalculator {
             final int columnIndex = col;
             TableColumn<MatrixViewModel.MatrixRow, Number> column =
                     new TableColumn<>("#" + (col + 1));
-            column.setCellValueFactory(param -> param.getValue().getCellValue(columnIndex));
+            column.setCellValueFactory(param -> param.getValue().elementProperty(columnIndex));
             column.setCellFactory(TextFieldTableCell
                     .<MatrixViewModel.MatrixRow, Number>forTableColumn(
                             new NumberStringConverter()));

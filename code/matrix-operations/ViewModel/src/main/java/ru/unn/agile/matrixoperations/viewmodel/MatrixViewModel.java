@@ -28,7 +28,7 @@ public class MatrixViewModel {
             }
         }
 
-        public FloatProperty getCellValue(final int colIndex) {
+        public FloatProperty elementProperty(final int colIndex) {
             return rowProperties.get(colIndex);
         }
 
@@ -59,5 +59,9 @@ public class MatrixViewModel {
         for (int row = 0; row < sourceMatrix.getRows(); row++) {
             rows.add(new MatrixRow(row));
         }
+    }
+
+    public FloatProperty elementProperty(final int rowIndex, final int colIndex) {
+        return rows.get(rowIndex).elementProperty(colIndex);
     }
 }
