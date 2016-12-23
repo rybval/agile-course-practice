@@ -200,6 +200,8 @@ include "code/Vector3D/ViewModel"
 project(":code/Vector3D/ViewModel").name = "Vector3D-ViewModel"
 include "code/Vector3D/View"
 project(":code/Vector3D/View").name = "Vector3D-View"
+include "code/matrix-operations/Infrastructure"
+project(":code/matrix-operations/Infrastructure").name = "matrix-operations-Infrastructure"
 
 // Рябинкин Евгений
 // Сахаров Алексей
