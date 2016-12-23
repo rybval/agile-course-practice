@@ -2,21 +2,25 @@ package ru.unn.agile.matrixoperations.infrastructure;
 
 import ru.unn.agile.matrixoperations.viewmodel.ILogger;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TxtLogger implements ILogger {
-    private static final String FILENAME = "user_actions.log";
+    private static final String DEFAULT_FILENAME = "./user_actions.log";
+    private final File file;
+
+    TxtLogger(final String filename) {
+        file = new File(filename);
+    }
+
+    TxtLogger() {
+      this(DEFAULT_FILENAME);
+    }
 
     @Override
     public void log(final String message) {
-        File file = new File(FILENAME);
         if (!file.exists()) {
             try {
                 Files.createFile(file.toPath());
@@ -26,7 +30,11 @@ public class TxtLogger implements ILogger {
         }
         if (file.isFile()) {
             try {
-                Files.write(file.toPath(), message.getBytes(), StandardOpenOption.APPEND);
+                FileWriter writer = new FileWriter(file.getPath());
+                writer.append(message);
+                writer.append(System.getProperty("line.separator"));
+                writer.flush();
+                writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -35,17 +43,13 @@ public class TxtLogger implements ILogger {
 
     @Override
     public List<String> getLog() {
-        List<String> out;
-        if (new File(FILENAME).isFile()) {
-            Path path = FileSystems.getDefault().getPath(FILENAME);
+        List<String> out = new ArrayList<>();
+        if (file.isFile()) {
             try {
-                out = Files.readAllLines(path);
+                out = Files.readAllLines(file.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
-                out = new ArrayList<>();
             }
-        } else {
-            out = new ArrayList<>();
         }
         return out;
     }
