@@ -1,5 +1,6 @@
 package ru.unn.agile.matrixoperations.viewmodel;
 
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import org.junit.After;
@@ -356,6 +357,30 @@ public class ViewModelTests {
                 getLastLog());
     }
 
+    @Test
+    public void canLogLeftMatrixElementChanging() {
+        setUpLogger();
+        FloatProperty leftMatrixEl = viewModel.leftMatrix().elementProperty(0, 1);
+
+        leftMatrixEl.set(2.718f);
+        leftMatrixEl.set(3.141f);
+
+        assertEquals(LogMessages.CHANGE_LEFT_MATRIX_ELEMENT + " " + "[" + 0 + "][" + 1 + "]"
+                        + " from " + 2.718f + " to " + 3.141f, getLastLog());
+    }
+
+    @Test
+    public void canLogRightMatrixElementChanging() {
+        setUpLogger();
+        FloatProperty rightMatrixEl = viewModel.rightMatrix().elementProperty(1, 0);
+
+        rightMatrixEl.set(42.0f);
+        rightMatrixEl.set(32.0f);
+
+        assertEquals(LogMessages.CHANGE_RIGHT_MATRIX_ELEMENT + " " + "[" + 1 + "][" + 0 + "]"
+                + " from " + 42.0f + " to " + 32.0f, getLastLog());
+    }
+
     private void doTestOperationGet(final Matrix.Operation op) {
         viewModel.operationProperty().set(op);
         assertEquals(op, viewModel.getOperation());
@@ -421,6 +446,10 @@ public class ViewModelTests {
 
     private String getLastLog() {
         List<String> messages = logger.getLog();
-        return messages.get(messages.size() - 1);
+        if (messages.size() > 0) {
+            return messages.get(messages.size() - 1);
+        } else {
+            return null;
+        }
     }
 }

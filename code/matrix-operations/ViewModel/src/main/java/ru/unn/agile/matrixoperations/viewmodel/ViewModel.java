@@ -255,6 +255,16 @@ public final class ViewModel {
         return message + " to " + newValue.toString();
     }
 
+    private String buildMessage(final String message, final Object oldValue,
+                                final Object newValue, final int ... indexes) {
+        StringBuilder indexStrBldr = new StringBuilder();
+        for (int index : indexes) {
+            indexStrBldr.append("[" + index + "]");
+        }
+        return message + " " + indexStrBldr.toString()
+                + " from " + oldValue.toString() + " to " + newValue.toString();
+    }
+
     private void setValuesListeners() {
         operation.addListener((observable, oldValue, newValue) -> {
             status.set(getInputStatus());
@@ -273,6 +283,26 @@ public final class ViewModel {
         rightMatrixRows.addListener((observable, oldValue, newValue) ->
                 logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ROWS, oldValue, newValue))
         );
+
+        for (int r = 0; r < leftMatrixRows.get(); r++) {
+            for (int c = 0; c < leftMatrixColumns.get(); c++) {
+                final int rowIndex = r;
+                final int colIndex = c;
+                leftMatrixViewModel.elementProperty(r, c).addListener((ov, oldValue, newValue) ->
+                    logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_ELEMENT,
+                            oldValue, newValue, rowIndex, colIndex)));
+            }
+        }
+
+        for (int r = 0; r < rightMatrixRows.get(); r++) {
+            for (int c = 0; c < rightMatrixColumns.get(); c++) {
+                final int rowIndex = r;
+                final int colIndex = c;
+                rightMatrixViewModel.elementProperty(r, c).addListener((ov, oldValue, newValue) ->
+                        logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ELEMENT,
+                                oldValue, newValue, rowIndex, colIndex)));
+            }
+        }
 
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {
@@ -325,6 +355,8 @@ final class LogMessages {
     static final String CHANGE_LEFT_MATRIX_ROWS = "Change rows of left matrix count";
     static final String CHANGE_RIGHT_MATRIX_COLS = "Change columns of right matrix count";
     static final String CHANGE_RIGHT_MATRIX_ROWS = "Change rows of right matrix count";
+    static final String CHANGE_LEFT_MATRIX_ELEMENT = "Change element of left matrix";
+    static final String CHANGE_RIGHT_MATRIX_ELEMENT = "Change element of right matrix";
 
     private LogMessages() { }
 }
