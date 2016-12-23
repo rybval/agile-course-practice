@@ -111,6 +111,7 @@
               <Label fx:id="statusLabel" layoutX="9.0" layoutY="9.0" prefHeight="17.0" prefWidth="642.0" text="Label" />
            </children>
         </Pane>
+           <ListView items="${viewModel.log}" />
            </children>
         </VBox>
      </children>

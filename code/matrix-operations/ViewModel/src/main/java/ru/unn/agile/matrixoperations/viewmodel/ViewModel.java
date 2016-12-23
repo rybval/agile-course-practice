@@ -48,6 +48,9 @@ public final class ViewModel {
             new SimpleObjectProperty<>(
                     FXCollections.observableArrayList(Matrix.Operation.values()));
 
+    private final ObjectProperty<ObservableList<String>> log = new SimpleObjectProperty<>(
+            FXCollections.observableArrayList());
+
     public enum Status {
         INVALID_LEFT_MATRIX_ROWS("Left matrix has invalid rows count."),
         INVALID_LEFT_MATRIX_COLS("Left matrix has invalid columns count."),
@@ -82,6 +85,7 @@ public final class ViewModel {
             throw new IllegalArgumentException("Logger can not be null");
         }
         this.logger = logger;
+        log.get().setAll(logger.getLog());
     }
 
     // FXML needs default c-tor for binding
@@ -105,6 +109,7 @@ public final class ViewModel {
         }
 
         logger.log(LogMessages.CALCULATE);
+        log.get().setAll(logger.getLog());
 
         resultMatrix = operation.get().apply(leftMatrix, rightMatrix);
 
@@ -114,6 +119,14 @@ public final class ViewModel {
         resultMatrixViewModel.setMatrix(resultMatrix);
 
         status.set(Status.SUCCESS);
+    }
+
+    public ObjectProperty<ObservableList<String>> logProperty() {
+        return log;
+    }
+
+    public ObservableList<String> getLog() {
+        return log.get();
     }
 
     public Integer getDefaultRowsCount() {
@@ -209,6 +222,7 @@ public final class ViewModel {
         m.updateDimensions(rows, cols);
         mvm.setMatrix(m);
         status.set(getInputStatus());
+        setMatrixListeners();
         matrixUpdated.set(true);
     }
 
@@ -251,10 +265,6 @@ public final class ViewModel {
         return message + " from " + oldValue.toString() + " to " + newValue.toString();
     }
 
-    private String buildMessage(final String message, final Object newValue) {
-        return message + " to " + newValue.toString();
-    }
-
     private String buildMessage(final String message, final Object oldValue,
                                 final Object newValue, final int ... indexes) {
         StringBuilder indexStrBldr = new StringBuilder();
@@ -265,32 +275,16 @@ public final class ViewModel {
                 + " from " + oldValue.toString() + " to " + newValue.toString();
     }
 
-    private void setValuesListeners() {
-        operation.addListener((observable, oldValue, newValue) -> {
-            status.set(getInputStatus());
-            logger.log(buildMessage(LogMessages.CHANGE_OPERATION, oldValue, newValue));
-        });
-
-        leftMatrixColumns.addListener((observable, oldValue, newValue) ->
-            logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_COLS, oldValue, newValue))
-        );
-        leftMatrixRows.addListener((observable, oldValue, newValue) ->
-                logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_ROWS, oldValue, newValue))
-        );
-        rightMatrixColumns.addListener((observable, oldValue, newValue) ->
-                logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_COLS, oldValue, newValue))
-        );
-        rightMatrixRows.addListener((observable, oldValue, newValue) ->
-                logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ROWS, oldValue, newValue))
-        );
-
+    private void setMatrixListeners() {
         for (int r = 0; r < leftMatrixRows.get(); r++) {
             for (int c = 0; c < leftMatrixColumns.get(); c++) {
                 final int rowIndex = r;
                 final int colIndex = c;
-                leftMatrixViewModel.elementProperty(r, c).addListener((ov, oldValue, newValue) ->
+                leftMatrixViewModel.elementProperty(r, c).addListener((ov, oldValue, newValue) -> {
                     logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_ELEMENT,
-                            oldValue, newValue, rowIndex, colIndex)));
+                            oldValue, newValue, rowIndex, colIndex));
+                    log.get().setAll(logger.getLog());
+                });
             }
         }
 
@@ -298,11 +292,40 @@ public final class ViewModel {
             for (int c = 0; c < rightMatrixColumns.get(); c++) {
                 final int rowIndex = r;
                 final int colIndex = c;
-                rightMatrixViewModel.elementProperty(r, c).addListener((ov, oldValue, newValue) ->
-                        logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ELEMENT,
-                                oldValue, newValue, rowIndex, colIndex)));
+                rightMatrixViewModel.elementProperty(r, c).addListener((ov, oldValue, newValue) -> {
+                    logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ELEMENT,
+                            oldValue, newValue, rowIndex, colIndex));
+                    log.get().setAll(logger.getLog());
+                });
             }
         }
+    }
+
+    private void setValuesListeners() {
+        operation.addListener((observable, oldValue, newValue) -> {
+            status.set(getInputStatus());
+            logger.log(buildMessage(LogMessages.CHANGE_OPERATION, oldValue, newValue));
+            log.get().setAll(logger.getLog());
+        });
+
+        leftMatrixColumns.addListener((observable, oldValue, newValue) -> {
+            logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_COLS, oldValue, newValue));
+            log.get().setAll(logger.getLog());
+        });
+        leftMatrixRows.addListener((observable, oldValue, newValue) -> {
+            logger.log(buildMessage(LogMessages.CHANGE_LEFT_MATRIX_ROWS, oldValue, newValue));
+            log.get().setAll(logger.getLog());
+        });
+        rightMatrixColumns.addListener((observable, oldValue, newValue) -> {
+            logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_COLS, oldValue, newValue));
+            log.get().setAll(logger.getLog());
+        });
+        rightMatrixRows.addListener((observable, oldValue, newValue) -> {
+            logger.log(buildMessage(LogMessages.CHANGE_RIGHT_MATRIX_ROWS, oldValue, newValue));
+            log.get().setAll(logger.getLog());
+        });
+
+        setMatrixListeners();
 
         final List<IntegerProperty> fields = new ArrayList<IntegerProperty>() {
             {

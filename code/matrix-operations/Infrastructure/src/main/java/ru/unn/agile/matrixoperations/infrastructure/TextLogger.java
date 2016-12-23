@@ -15,11 +15,11 @@ public class TextLogger implements ILogger {
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private final File file;
 
-    TextLogger(final String filename) {
+    public TextLogger(final String filename) {
         file = new File(filename);
     }
 
-    TextLogger() {
+    public TextLogger() {
       this(DEFAULT_FILENAME);
     }
 
@@ -39,7 +39,7 @@ public class TextLogger implements ILogger {
         }
         if (file.isFile()) {
             try {
-                FileWriter writer = new FileWriter(file.getPath());
+                FileWriter writer = new FileWriter(file.getPath(), true);
                 writer.append(timestamp() + " > " + message + System.getProperty("line.separator"));
                 writer.flush();
                 writer.close();

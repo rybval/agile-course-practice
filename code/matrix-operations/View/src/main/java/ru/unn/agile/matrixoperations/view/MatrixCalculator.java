@@ -1,5 +1,7 @@
 package ru.unn.agile.matrixoperations.view;
 
+import ru.unn.agile.matrixoperations.infrastructure.TextLogger;
+
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -7,6 +9,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import ru.unn.agile.matrixoperations.model.Matrix;
+import ru.unn.agile.matrixoperations.viewmodel.ILogger;
 import ru.unn.agile.matrixoperations.viewmodel.MatrixViewModel;
 import ru.unn.agile.matrixoperations.viewmodel.ViewModel;
 
@@ -38,8 +41,12 @@ public class MatrixCalculator {
     @FXML
     private Label statusLabel;
 
+    private final ILogger logger = new TextLogger();
+
     @FXML
     void initialize() {
+        viewModel.setLogger(logger);
+
         bindControls();
         bindLeftMatrixControls();
         bindRightMatrixControls();

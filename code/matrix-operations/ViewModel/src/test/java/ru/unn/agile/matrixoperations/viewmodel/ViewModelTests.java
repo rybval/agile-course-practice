@@ -40,9 +40,17 @@ public class ViewModelTests {
                                            7, 8};
     private Matrix rightMultMatrix;
 
-    protected ViewModel viewModel;
+    private ViewModel viewModel;
 
-    protected ILogger logger;
+    private ILogger logger;
+
+    public void setViewModel(final ViewModel vm) {
+        viewModel = vm;
+    }
+
+    public void setLogger(final ILogger lgr) {
+        logger = lgr;
+    }
 
     @Before
     public void setUp() {
