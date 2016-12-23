@@ -40,9 +40,9 @@ public class ViewModelTests {
                                            7, 8};
     private Matrix rightMultMatrix;
 
-    private ViewModel viewModel;
+    protected ViewModel viewModel;
 
-    private ILogger logger;
+    protected ILogger logger;
 
     @Before
     public void setUp() {
@@ -294,9 +294,7 @@ public class ViewModelTests {
 
         viewModel.calculate();
 
-        List<String> messages = logger.getLog();
-        String lastMessage = messages.get(messages.size() - 1);
-        assertEquals(LogMessages.CALCULATE, lastMessage);
+        assertTrue(getLastLog().endsWith(LogMessages.CALCULATE));
     }
 
     @Test
@@ -307,8 +305,8 @@ public class ViewModelTests {
         operation.set(Matrix.Operation.ADD);
         operation.set(Matrix.Operation.MULTIPLY);
 
-        assertEquals(LogMessages.CHANGE_OPERATION + " from " + Matrix.Operation.ADD.toString()
-                + " to " + operation.get().toString(), getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_OPERATION
+               + " from " + Matrix.Operation.ADD.toString() + " to " + operation.get().toString()));
     }
 
     @Test
@@ -319,7 +317,8 @@ public class ViewModelTests {
         leftMatrixCols.set(5);
         leftMatrixCols.set(7);
 
-        assertEquals(LogMessages.CHANGE_LEFT_MATRIX_COLS + " from " + 5 + " to " + 7, getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_LEFT_MATRIX_COLS
+                                            + " from " + 5 + " to " + 7));
     }
 
     @Test
@@ -330,7 +329,8 @@ public class ViewModelTests {
         leftMatrixRows.set(1);
         leftMatrixRows.set(3);
 
-        assertEquals(LogMessages.CHANGE_LEFT_MATRIX_ROWS + " from " + 1 + " to " + 3, getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_LEFT_MATRIX_ROWS
+                                         + " from " + 1 + " to " + 3));
     }
 
     @Test
@@ -341,8 +341,8 @@ public class ViewModelTests {
         rightMatrixCols.set(8);
         rightMatrixCols.set(9);
 
-        assertEquals(LogMessages.CHANGE_RIGHT_MATRIX_COLS + " from " + 8 + " to " + 9,
-                getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_RIGHT_MATRIX_COLS
+                                         + " from " + 8 + " to " + 9));
     }
 
     @Test
@@ -353,8 +353,8 @@ public class ViewModelTests {
         rightMatrixRows.set(4);
         rightMatrixRows.set(6);
 
-        assertEquals(LogMessages.CHANGE_RIGHT_MATRIX_ROWS + " from " + 4 + " to " + 6,
-                getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_RIGHT_MATRIX_ROWS
+                                         + " from " + 4 + " to " + 6));
     }
 
     @Test
@@ -365,8 +365,8 @@ public class ViewModelTests {
         leftMatrixEl.set(2.718f);
         leftMatrixEl.set(3.141f);
 
-        assertEquals(LogMessages.CHANGE_LEFT_MATRIX_ELEMENT + " " + "[" + 0 + "][" + 1 + "]"
-                        + " from " + 2.718f + " to " + 3.141f, getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_LEFT_MATRIX_ELEMENT
+                + " " + "[" + 0 + "][" + 1 + "]" + " from " + 2.718f + " to " + 3.141f));
     }
 
     @Test
@@ -377,8 +377,8 @@ public class ViewModelTests {
         rightMatrixEl.set(42.0f);
         rightMatrixEl.set(32.0f);
 
-        assertEquals(LogMessages.CHANGE_RIGHT_MATRIX_ELEMENT + " " + "[" + 1 + "][" + 0 + "]"
-                + " from " + 42.0f + " to " + 32.0f, getLastLog());
+        assertTrue(getLastLog().endsWith(LogMessages.CHANGE_RIGHT_MATRIX_ELEMENT
+                + " " + "[" + 1 + "][" + 0 + "]" + " from " + 42.0f + " to " + 32.0f));
     }
 
     private void doTestOperationGet(final Matrix.Operation op) {
@@ -439,7 +439,7 @@ public class ViewModelTests {
         }
     }
 
-    private void setUpLogger() {
+    protected void setUpLogger() {
         logger = new TestingLogger();
         viewModel.setLogger(logger);
     }

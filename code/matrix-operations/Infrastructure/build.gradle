@@ -1,3 +1,4 @@
 dependencies {
     compile project(':matrix-operations-ViewModel')
+    testCompile project(':matrix-operations-ViewModel').sourceSets.test.output
 }
